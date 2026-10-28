@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 While True :
 
     # 入力欄（前後の空白を除去）
-    user_input = input("\n 取得したいページのURLを入力してください: ").strip()
+    user_input = input("\n ----------------------------------- \n 取得したいページのURLを入力してください: ").strip()
 
     # https:// や http:// で始まっていない場合は自動で付与する
     if not user_input.startswith(("http://", "https://")):
@@ -32,8 +32,8 @@ While True :
         main_content = soup.find("article") or soup.find("main") or soup
 
         clean_text = main_content.get_text(separator="\n", strip=True)
-        print("\n--- 取得結果 --- \n ")
+        print(" \n --------------- 取得結果 --------------- \n ")
         print(clean_text)
     
     except requests.exceptions.RequestException as e:
-        print(f"エラーが発生しました: {e}")
+        print(f" \n ----------------------------------- \n エラーが発生しました！！！: \n  {e} \n ----------------------------------- \n")
