@@ -1,36 +1,39 @@
 import requests
 from bs4 import BeautifulSoup
 
-# 入力欄（前後の空白を除去）
-user_input = input("取得したいページのURLを入力してください: ").strip()
+#ずっと繰り返すようにする
+While True :
 
-# https:// や http:// で始まっていない場合は自動で付与する
-if not user_input.startswith(("http://", "https://")):
-    url = "https://" + user_input
-else:
-    url = user_input
+    # 入力欄（前後の空白を除去）
+    user_input = input("取得したいページのURLを入力してください: ").strip()
 
-headers = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-}
+    # https:// や http:// で始まっていない場合は自動で付与する
+    if not user_input.startswith(("http://", "https://")):
+        url = "https://" + user_input
+    else:
+        url = user_input
 
-try:
-    response = requests.get(url, headers=headers)
-    response.raise_for_status()
-    response.encoding = response.apparent_encoding
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    }
 
-    soup = BeautifulSoup(response.text, "html.parser")
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        response.encoding = response.apparent_encoding
 
-    # 不要なタグを削除
-    for element in soup(["script", "style", "header", "footer", "nav", "aside"]):
-        element.decompose()
+        soup = BeautifulSoup(response.text, "html.parser")
 
-    # 記事本文が含まれる範囲を優先的に探す（見つからない場合は全体）
-    main_content = soup.find("article") or soup.find("main") or soup
+        # 不要なタグを削除
+        for element in soup(["script", "style", "header", "footer", "nav", "aside"]):
+            element.decompose()
 
-    clean_text = main_content.get_text(separator="\n", strip=True)
-    print("\n--- 取得結果 ---")
-    print(clean_text)
+        # 記事本文が含まれる範囲を優先的に探す（見つからない場合は全体）
+        main_content = soup.find("article") or soup.find("main") or soup
 
-except requests.exceptions.RequestException as e:
-    print(f"エラーが発生しました: {e}")
+        clean_text = main_content.get_text(separator="\n", strip=True)
+        print("\n--- 取得結果 ---")
+        print(clean_text)
+    
+    except requests.exceptions.RequestException as e:
+        print(f"エラーが発生しました: {e}")
